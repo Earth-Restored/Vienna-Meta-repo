@@ -1,0 +1,21 @@
+[submodule "modules/Fountain-bridge"]
+	path = modules/Fountain-bridge
+	url = https://github.com/Earth-Restored/Fountain-bridge
+[submodule "modules/Vienna"]
+	path = modules/Vienna
+	url = https://github.com/Earth-Restored/Vienna
+[submodule "modules/Vienna-fabric"]
+	path = modules/Vienna-fabric
+	url = https://github.com/Earth-Restored/Vienna-fabric
+[submodule "modules/Fountain-connector-plugin-base"]
+	path = modules/Fountain-connector-plugin-base
+	url = https://github.com/Earth-Restored/Fountain-connector-plugin-base
+[submodule "modules/Fountain-fabric"]
+	path = modules/Fountain-fabric
+	url = https://github.com/Earth-Restored/Fountain-fabric
+[submodule "modules/Protocol"]
+	path = modules/Protocol
+	url = https://github.com/Earth-Restored/Protocol
+[submodule "modules/Vienna-data"]
+	path = modules/Vienna-data
+	url = https://github.com/Earth-Restored/Vienna-data
