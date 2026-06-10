@@ -4,7 +4,7 @@ Scripts to build and run Vienna.
 
 ## build_vienna.ps1
 
-Builds all Vienna components and copies relevant jars into staticdata, in the format of ViennaDotNet.StaticData.
+Builds all Vienna components and copies relevant jars into staticdata, in the format of Solace.StaticData.
 
 ## run_vienna.ps1
 
