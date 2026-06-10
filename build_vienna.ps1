@@ -29,6 +29,27 @@ function New-DirectorySafe {
     }
 }
 
+function Copy-NewestVersion {
+    param (
+        [string]$SourceDir,
+        [string]$Filter,
+        [string]$Destination
+    )
+    
+    $Files = Get-ChildItem -Path $SourceDir -Filter $Filter | Where-Object { $_.Name -match '\d+\.\d+\.\d+' }
+    
+    if ($Files) {
+        $NewestFile = $Files | Sort-Object { 
+            [version]($_.Name -replace '^.*?(\d+\.\d+\.\d+).*$', '$1') 
+        } | Select-Object -Last 1
+
+        Write-Host "Copying newest found: $($NewestFile.Name) -> $Destination" -ForegroundColor Green
+        Copy-Item -Path $NewestFile.FullName -Destination $Destination -Force
+    } else {
+        Write-Error "No versioned files matching '$Filter' found in $SourceDir"
+    }
+}
+
 $modulesToBuild = "./.."
 
 New-DirectorySafe "./build"
@@ -54,7 +75,7 @@ cd Fountain-bridge
 ./mvnw package
 cd ..
 
-cp ./Fountain-bridge/target/fountain-0.0.1-SNAPSHOT-jar-with-dependencies.jar $modulesToBuild/staticdata/server_jars/fountain-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+Copy-NewestVersion -SourceDir "./Fountain-bridge/target" -Filter "fountain-*-jar-with-dependencies.jar" -Destination "$modulesToBuild/staticdata/server_jars/"
 
 Write-Header "Building Fountain Fabric"
 cd Fountain-fabric
@@ -62,7 +83,7 @@ cd Fountain-fabric
 ./gradlew publishToMavenLocal
 cd ..
 
-cp ./Fountain-fabric/build/libs/fountain-0.0.1.jar $modulesToBuild/staticdata/server_template_dir/mods/fountain-0.0.1.jar
+Copy-NewestVersion -SourceDir "./Fountain-fabric/build/libs" -Filter "fountain-*.jar" -Destination "$modulesToBuild/staticdata/server_template_dir/mods/"
 
 Write-Header "Building Vienna Core"
 cd Vienna
@@ -70,13 +91,13 @@ cd Vienna
 ./mvnw install
 cd ..
 
-cp ./Vienna/buildplate/connector-plugin/target/buildplate-connector-plugin-0.0.1-SNAPSHOT-jar-with-dependencies.jar $modulesToBuild/staticdata/server_jars/buildplate-connector-plugin-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+Copy-NewestVersion -SourceDir "./Vienna/buildplate/connector-plugin/target" -Filter "buildplate-connector-plugin-*-jar-with-dependencies.jar" -Destination "$modulesToBuild/staticdata/server_jars/"
 
 Write-Header "Building Vienna Fabric"
 cd Vienna-fabric
 ./gradlew build
 cd ..
 
-cp ./Vienna-fabric/build/libs/vienna-0.0.1.jar $modulesToBuild/staticdata/server_template_dir/mods/vienna-0.0.1.jar
+Copy-NewestVersion -SourceDir "./Vienna-fabric/build/libs" -Filter "vienna-*.jar" -Destination "$modulesToBuild/staticdata/server_template_dir/mods/"
 
 cd ..
